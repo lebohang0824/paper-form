@@ -6,6 +6,9 @@ paperform.init = function () {
 	paperform.post();
 }
 
+
+paperform.loaders = 0;
+
 // Post request
 paperform.post = function () {
 	
@@ -29,14 +32,11 @@ paperform.post = function () {
 
 				body = paperform.fetchInputs(elements);
 
+				// Make a ajax request
+				paperform.postRequest(form, elements, url, body);
+
 				// Loader
 				paperform.setLoader(form);
-
-				// Make a ajax request
-				let req = paperform.postRequest(url, body);
-
-				paperform.onError(req, form);
-				paperform.onSuccess(req, form, elements);
 
 				body = '';
 
@@ -75,28 +75,11 @@ paperform.isPaperForm = function (form) {
 paperform.setLoader = function (form) {
 	if (form.hasAttribute('paper-loader')) {
 		if (form.getAttribute('paper-loader').trim() !== '') {
-			form.insertAdjacentHTML('afterbegin', form.getAttribute('paper-loader'));
 			paperform.loaders += 1;
+			form.insertAdjacentHTML('afterbegin', form.getAttribute('paper-loader'));
 			return true;
 		}
 	}
-}
-
-// On success
-paperform.onSuccess = function (req, form, elements) {
-	req.done(function (res) {
-		paperform.removeLoader(form);
-		paperform.isInputClear(form, elements);
-		paperform.requestDone(form, '<div class="alert alert-success">'+res+'</div>');
-	});
-}
-
-// On error
-paperform.onError = function (req, form) {
-	req.fail(function (res) {
-		paperform.removeLoader(form);
-		paperform.requestDone(form, '<div class="alert alert-danger">'+res+'</div>');
-	});
 }
 
 // Has loader attribute (default: false)
@@ -143,41 +126,37 @@ paperform.isInputClear = function (form, elements) {
 }
 
 // Make Ajax request
-paperform.postRequest = function (url, body) {
+paperform.postRequest = function (form, elements, url, body) {
 
-    let success = false;
-    let response = {};
     let xhr = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
+    xhr.open('POST', url, true);
 
-    xhr.open('POST', url, false);
+    let res = xhr.onreadystatechange = function() {
 
-    xhr.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) { 
-        	success = true;
+    	// On success
+        if (this.readyState == 4 && (this.status == 200 || this.status == 201)) {
+        	paperform.success(form, elements, body, this.responseText);
         } 
+
+        // On error
+        if(this.readyState == 2 && this.status >= 300 ) {
+        	paperform.fail(form, body, 'error');
+        }
     }
 
-    // Request successful.
-    response.done = function (callback) {
-    	if (success) {
-			callback(xhr.responseText);
-    	}
-	}
-
-	// Request failed.
-	response.fail = function (callback) {
-		if (!success) {
-			callback(xhr.responseText);
-		}
-	}
-
-	xhr.setRequestHeader("Access-Control-Allow-Origin", "*");
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
     xhr.send(body);
+}
 
-    return response;
+paperform.success = function (form, elements, body, res) {
+	paperform.removeLoader(form);
+	paperform.isInputClear(form, elements);
+	paperform.requestDone(form, '<div class="alert alert-success">'+res+'</div>');
+}
 
+paperform.fail = function (form, body, res) {
+	paperform.removeLoader(form);
+	paperform.requestDone(form, '<div class="alert alert-danger">'+res+'</div>');
 }
 
 paperform.init();
-paperform.loaders = 0;

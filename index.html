@@ -2,18 +2,10 @@
 <html>
 <head>
 	<title>PaperForm</title>
-	<style type="text/css">
-		.alert-success {
-			padding: 10px;
-			color: #fff;
-			margin: 10px 0;
-			background-color: green;
-		}
-	</style>
 </head>
 <body>
 
-	<form paper-post="https://jsonplaceholder.typicode.com/todos" paper-results="true" paper-loader="<h1>loading...</h1>" paper-clear="true">
+	<form paper-post="https://jsonplaceholder.typicode.com/todos" paper-results="true" paper-loader="loading..." paper-clear="true">
 		<h2>Paper form</h2>
 		<input type="text" name="name" autocomplete="off" placeholder="Full Name"><br>
 		<input type="text" name="surname" autocomplete="off" placeholder="Surname"><br>
