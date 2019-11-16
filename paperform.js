@@ -30,7 +30,7 @@ paperform.post = function () {
 
 				e.preventDefault();
 
-				body = paperform.fetchInputs(elements);
+				body = new FormData(form);
 
 				// Make a ajax request
 				paperform.postRequest(form, elements, url, body);
@@ -45,21 +45,6 @@ paperform.post = function () {
 		}
 	}
 
-}
-
-paperform.fetchInputs = function(elements) {
-	var body = '';
-	for (let j = 0; j < elements.length; j++) {
-		// Elements
-		let el = elements[j];
-		if (el.name.trim() !== '' && el.value.trim() !== '') {
-			if (el.type == 'radio') {
-				if (el.checked) body +=el.name +'='+ el.value +'&';
-			} else {body +=el.name +'='+ el.value +'&';}                  
-		}
-	}
-
-	return body.slice(0, body.length -1);
 }
 	
 // Check the selected form has min requirements of paperform
@@ -116,7 +101,7 @@ paperform.isInputClear = function (form, elements) {
 			for (let j = 0; j < elements.length; j++) {
 				// Clear inputs
 				let el = elements[j];
-				if (el.type == 'text' || el.type == 'email' || el.type == 'number' || el.type == 'textarea') {
+				if (el.type == 'text' || el.type == 'file' || el.type == 'email' || el.type == 'number' || el.type == 'textarea') {
 					el.value = '';
 				}
 			}
