@@ -128,8 +128,8 @@ paperform.postRequest = function (form, elements, url, body) {
         	paperform.fail(form, body, 'error');
         }
     }
-
-    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    
+    // xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
     xhr.send(body);
 }
 
