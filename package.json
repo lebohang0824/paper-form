@@ -1,0 +1,23 @@
+{
+  "name": "paper-form",
+  "version": "1.0.0",
+  "description": "Easy way to send post request without touching javascript",
+  "main": "paperform.js",
+  "scripts": {
+    "test": "jasmine"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lebohang0824/paper-form.git"
+  },
+  "keywords": [
+    "paper-form",
+    "ajax"
+  ],
+  "author": "Lebohang Mokoena",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lebohang0824/paper-form/issues"
+  },
+  "homepage": "https://github.com/lebohang0824/paper-form#readme"
+}
